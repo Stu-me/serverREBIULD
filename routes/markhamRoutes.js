@@ -6,7 +6,6 @@ router.get("/",(req,res)=>{
     res.send("home page");
 });
 
-
 router.get("/notices",(req,res)=>{
     res.send("notices are to be published here ");
 });
