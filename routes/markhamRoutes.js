@@ -1,21 +1,14 @@
 const express = require("express");
-
 const router = express.Router();
 
-router.get("/",(req,res)=>{
-    res.send("home page");
-});
+const {homePage,noticePage,registerPage,loginPage} = require('../controllers/markhamControllers');
 
-router.get("/notices",(req,res)=>{
-    res.send("notices are to be published here ");
-});
+router.route('/').get(homePage);
 
-router.get("/register",(req,res)=>{
-    res.send("you are registered");
-});
+router.route("/notices").get(noticePage);
 
-router.get("/login",(req,res)=>{
-    res.send("you logined");
-});
+router.route("/register").get(registerPage);
+
+router.route("/login").get(loginPage);
 
 module.exports = router;
