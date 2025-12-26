@@ -11,13 +11,13 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 //@desc Get user by id
-//@routes Post/markham/:id
+//@routes Get/markham/:id
 //@access public
 
 const getOneUser = asyncHandler(async (req, res) => {
   const details = await Detail.find({ user_id: req.params.id }); // we know that user must give id so it will not be empty
-  if (!details) {
-    res.send(404); // if no user find of that id
+  if (details.length === 0) {
+    res.status(404); // if no user find of that id
     throw new Error("No contact found for this the id ");
   }
   res.status(200).json(details);
@@ -72,14 +72,15 @@ const loginUser = asyncHandler(async(req,res)=>{
 const updateUser = asyncHandler(async(req,res)=>{
     const details = await Detail.findOne({user_id:req.params.id});
     if(!details){
+        res.status(404)
         throw new Error("User not found");
     }
-    const updateUser = await Detail.findbyIdAndUpdate(
-        req.params.id,
-        req.body,
+    const updateUser = await Detail.findOneAndUpdate(
+        {user_id:id},
+        {id,name,phoneNumber,email},
         {new:true}
     );
-    res.status(200).json(updatedContact)
+    res.status(200).json(updateUser)
 });
 
 //@desc delete user 
@@ -89,6 +90,7 @@ const updateUser = asyncHandler(async(req,res)=>{
 const deleteUser = asyncHandler(async(req,res)=>{
     const details = await Detail.findOne({user_id:req.params.id});
     if(!details){
+        res.status(404)
         throw new Error("user not found");
     }
     const deleteUser = await Detail.findOneAndDelete({user_id:req.params.id});
