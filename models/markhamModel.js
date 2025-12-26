@@ -18,7 +18,7 @@ const markhamSchema = mongoose.Schema(
       type: String,
       required: [true, "Please enter the email address "],
     },
-    phomeNumber: {
+    phoneNumber: {
       type: Number,
       required: true,
       min: [8, "must enter 8 digits"],

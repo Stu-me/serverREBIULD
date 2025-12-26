@@ -1,14 +1,18 @@
 const express = require("express");
 const router = express.Router();
 
-const {homePage,noticePage,registerPage,loginPage} = require('../controllers/markhamControllers');
+const {getAllUsers,getOneUser,registerUser,loginUser,updateUser,deleteUser} = require('../controllers/markhamControllers');
 
-router.route('/').get(homePage);
+router.route('/').get(getAllUsers);
 
-router.route("/notices").get(noticePage);
+router.route("/:id").get(getOneUser);
 
-router.route("/register").get(registerPage);
+router.route("/register/:id").post(registerUser);
 
-router.route("/login").get(loginPage);
+router.route("/login/:id").get(loginUser);
+
+router.route("/update/:id").put(updateUser);
+
+router.route("/delete/:id").delete(deleteUser);
 
 module.exports = router;
