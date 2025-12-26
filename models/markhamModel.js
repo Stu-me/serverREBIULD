@@ -3,9 +3,11 @@ const mongoose = require("mongoose");
 const markhamSchema = mongoose.Schema(
   {
     user_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
+      // type: mongoose.Schema.Types.ObjectId,
+      type: String,
+      unique:[true,"enter the unique id"],
+      required: [true,"enter the user_idrs"],
+      // ref: "User",
     },
     name: {
       type: String,
@@ -21,12 +23,10 @@ const markhamSchema = mongoose.Schema(
     phoneNumber: {
       type: Number,
       required: true,
-      min: [8, "must enter 8 digits"],
-      max: [8, "must not enter more than 8 digits"],
     },
   },
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
 

@@ -7,7 +7,7 @@ router.route('/').get(getAllUsers);
 
 router.route("/:id").get(getOneUser);
 
-router.route("/register/:id").post(registerUser);
+router.route("/register/").post(registerUser);
 
 router.route("/login/:id").get(loginUser);
 

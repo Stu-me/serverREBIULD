@@ -6,8 +6,8 @@ const Detail = require("../models/markhamModel");
 //@access public
 
 const getAllUsers = asyncHandler(async (req, res) => {
-  const details = await Detail.find({ user_id: req.user.id });
-  res.status(200).json(contact);
+  const details = await Detail.find({});
+  res.status(200).json(details);
 });
 
 //@desc Get user by id
@@ -15,12 +15,12 @@ const getAllUsers = asyncHandler(async (req, res) => {
 //@access public
 
 const getOneUser = asyncHandler(async (req, res) => {
-  const detail = await Detail.find({ user_id: req.params.id }); // we know that user must give id so it will not be empty
-  if (!detail) {
+  const details = await Detail.find({ user_id: req.params.id }); // we know that user must give id so it will not be empty
+  if (!details) {
     res.send(404); // if no user find of that id
     throw new Error("No contact found for this the id ");
   }
-  res.status(200).json(detail);
+  res.status(200).json(details);
 });
 
 //@desc register user
@@ -29,18 +29,26 @@ const getOneUser = asyncHandler(async (req, res) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   console.log("Input data = ", req.body);
-  const { name, email, phoneNumber } = req.body;
-  if (!name || !email || !phoneNumber) {
+  const { name, email, phoneNumber,user_id } = req.body;
+  if (!name || !email || !phoneNumber || !user_id) {
+    console.log(`${name} -- ${email} -- ${phoneNumber} -- ${user_id}`);
+    
     res.status(400);
     throw new Error("ALL FIELDS ARE MANADATORY"); // when we dont have all the details
   }
-  const detail = await Detail.create({
+  const check = await Detail.findOne({user_id:user_id});
+  if(check){
+    throw new Error("Enter unique id");
+  }
+
+  const details = await Detail.create({
     name,
     email,
     phoneNumber,
-    user_id: req.user.id, // created by the moongoose as datatype is objectId
+    user_id: user_id, // middleware needed here for req.user.id so cheap way we put trust on the user
+                          // to input the unique values 
   });
-  res.status(201).json(detail);
+  res.status(201).json(details);
 });
 
 //@desc login user
@@ -49,12 +57,12 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async(req,res)=>{
     const id = req.params.id;
-    const detail = await Detail.findbyId({user_id:req.params.id});
-    if(!detail){
+    const details = await Detail.findOne({user_id:req.params.id});
+    if(!details){
         res.status(404);
         throw new Error("User not found -- enter a valid id ");
     }
-    res.status(200).json(detail);
+    res.status(200).json(details);
 });
 
 //@desc update user 
@@ -62,8 +70,8 @@ const loginUser = asyncHandler(async(req,res)=>{
 //@access private
 
 const updateUser = asyncHandler(async(req,res)=>{
-    const detail = await Detail.findbyId({user_id:req.params.id});
-    if(!detail){
+    const details = await Detail.findOne({user_id:req.params.id});
+    if(!details){
         throw new Error("User not found");
     }
     const updateUser = await Detail.findbyIdAndUpdate(
@@ -79,11 +87,11 @@ const updateUser = asyncHandler(async(req,res)=>{
 //@access private
 
 const deleteUser = asyncHandler(async(req,res)=>{
-    const detail = await Detail.findbyId({user_id:req.params.id});
-    if(!detail){
+    const details = await Detail.findOne({user_id:req.params.id});
+    if(!details){
         throw new Error("user not found");
     }
-    const deleteUser = await Detail.findbyIdAndUpdate({user_id:req.params.id});
+    const deleteUser = await Detail.findOneAndDelete({user_id:req.params.id});
     res.status(200).json({message:`delted -${req.params.id}`});
 });
 
